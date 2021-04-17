@@ -4,6 +4,7 @@ import { DatabaseModule } from 'src/config/database.module';
 import { UserModule } from './user/user.module';
 import { RoomModule } from './room/room.module';
 import { ReservationModule } from './reservation/reservation.module';
+import { GraphQLModule } from '@nestjs/graphql';
 @Module({
   imports: [
     ConfigurationModule,
@@ -11,6 +12,9 @@ import { ReservationModule } from './reservation/reservation.module';
     UserModule,
     RoomModule,
     ReservationModule,
+    GraphQLModule.forRoot({
+      autoSchemaFile: true,
+    }),
   ],
   controllers: [],
   providers: [],
