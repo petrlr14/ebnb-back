@@ -1,10 +1,11 @@
 import { Module } from '@nestjs/common';
-import { ConfigurationModule } from 'src/config/configuration.module';
-import { DatabaseModule } from 'src/config/database.module';
+
 import { UserModule } from './user/user.module';
 import { RoomModule } from './room/room.module';
 import { ReservationModule } from './reservation/reservation.module';
 import { GraphQLModule } from '@nestjs/graphql';
+import { ConfigurationModule } from './config/configuration.module';
+import { DatabaseModule } from './config/database.module';
 @Module({
   imports: [
     ConfigurationModule,
