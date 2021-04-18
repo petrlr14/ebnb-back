@@ -1,6 +1,6 @@
 import { User } from './user.entity';
 import { EntityRepository, Repository } from 'typeorm';
-import { CreateUserInput } from './user.input';
+import { CreateUserInput, FindUser } from './user.input';
 import errorHandler from '../utils/errorHandler';
 
 @EntityRepository(User)
@@ -13,5 +13,22 @@ export class UserRepository extends Repository<User> {
     } catch (e) {
       errorHandler(e, User.name);
     }
+  }
+  async getUser(verifyUser: FindUser): Promise<User> {
+    if (verifyUser.email)
+      return await this.findOne({ where: { email: verifyUser.email } });
+    if (verifyUser.code)
+      return await this.findOne({ where: { code: verifyUser.code } });
+    return null;
+  }
+  async addVerificationId(user: User, token: string): Promise<User> {
+    user.lastVerificationId = token;
+    await this.save(user);
+    return user;
+  }
+  async removeVerificationId(user: User): Promise<User> {
+    user.lastVerificationId = null;
+    await this.save(user);
+    return user;
   }
 }
