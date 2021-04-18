@@ -1,23 +1,32 @@
-import { Reservation } from 'src/reservation/reservation.entity';
+import { Field, ObjectType } from '@nestjs/graphql';
 import {
   Column,
   CreateDateColumn,
   Entity,
+  Generated,
+  Index,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
-
+import { Reservation } from '../reservation/reservation.entity';
+@ObjectType()
 @Entity('user')
 export class User {
+  @Field()
   @PrimaryGeneratedColumn()
   id: number;
+  @Field()
   @Column()
+  @Generated('uuid')
   code: string;
+  @Field()
   @Column()
+  @Index({ unique: true })
   email: string;
   @Column({ nullable: true })
   lastVerificationId: string;
+  @Field(() => [Reservation])
   @OneToMany(() => Reservation, (reservation) => reservation.user)
   reservations: Reservation[];
   @CreateDateColumn({ name: 'created_at' })

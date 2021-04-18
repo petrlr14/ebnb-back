@@ -1,5 +1,6 @@
-import { Room } from 'src/room/room.entity';
-import { User } from 'src/user/user.entity';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Room } from '../room/room.entity';
+import { User } from '../user/user.entity';
 import {
   Column,
   Entity,
@@ -8,8 +9,10 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 
+@ObjectType()
 @Entity()
 export class Reservation {
+  @Field()
   @PrimaryGeneratedColumn()
   id: number;
   @ManyToOne(() => User, (user) => user.id, { eager: true })
