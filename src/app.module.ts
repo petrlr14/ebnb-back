@@ -7,6 +7,7 @@ import { GraphQLModule } from '@nestjs/graphql';
 import { ConfigurationModule } from './config/configuration.module';
 import { DatabaseModule } from './config/database.module';
 import { SendgridModule } from './sendgrid/sendgrid.module';
+import { ResourcesModule } from './resources/resources.module';
 @Module({
   imports: [
     ConfigurationModule,
@@ -15,6 +16,7 @@ import { SendgridModule } from './sendgrid/sendgrid.module';
     RoomModule,
     ReservationModule,
     SendgridModule,
+    ResourcesModule,
     GraphQLModule.forRoot({
       autoSchemaFile: true,
     }),

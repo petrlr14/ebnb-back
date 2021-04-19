@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  Generated,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -10,7 +11,8 @@ import { Room } from './room.entity';
 @Entity()
 export class Resource {
   @PrimaryGeneratedColumn()
-  id: number;
+  @Generated('uuid')
+  id: string;
   @Column()
   url: string;
   @ManyToOne(() => Room, (room) => room.resources, { eager: false })

@@ -23,6 +23,8 @@ import { ConfigModule } from '@nestjs/config';
         JWT_SECRET: Joi.string().required(),
         JWT_EXPIRE: Joi.string().required(),
         FRONT_LINK: Joi.string().required(),
+        AZURE_STORAGE_SAS_KEY: Joi.string().required(),
+        AZURE_STORAGE_ACCOUNT: Joi.string().required(),
       }),
     }),
   ],
