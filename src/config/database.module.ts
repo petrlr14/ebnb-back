@@ -23,7 +23,6 @@ import { ConfigService } from '@nestjs/config';
         return {
           type: configService.get<string>('DB_ENGINE'),
           url,
-          ssl: configService.get<string>('NODE_ENV') !== 'development',
           logging: configService.get<boolean>('DB_LOGGING', false),
           autoLoadEntities: true,
           synchronize: configService.get<boolean>('DB_SYNCHRONIZE'),
