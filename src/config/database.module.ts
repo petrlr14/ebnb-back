@@ -7,13 +7,23 @@ import { ConfigService } from '@nestjs/config';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => {
+        const url =
+          configService.get<string>('DATABASE_URL') ??
+          `${configService.get<string>(
+            'DB_ENGINE',
+          )}://${configService.get<string>(
+            'DB_USERNAME',
+          )}:${configService.get<string>(
+            'DB_PASSWORD',
+          )}@${configService.get<string>(
+            'DB_HOST',
+          )}:${configService.get<number>(
+            'DB_PORT',
+          )}/${configService.get<string>('DB_DATABASE')}`;
         return {
           type: configService.get<string>('DB_ENGINE'),
-          host: configService.get<string>('DB_HOST'),
-          port: configService.get<number>('DB_PORT'),
-          username: configService.get<string>('DB_USERNAME'),
-          password: configService.get<string>('DB_PASSWORD'),
-          database: configService.get<string>('DB_DATABASE'),
+          url,
+          ssl: configService.get<string>('NODE_ENV') !== 'development',
           logging: configService.get<boolean>('DB_LOGGING', false),
           autoLoadEntities: true,
           synchronize: configService.get<boolean>('DB_SYNCHRONIZE'),
