@@ -1,4 +1,3 @@
-import { Room } from 'src/room/room.entity';
 import {
   Column,
   Entity,
@@ -6,6 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { Room } from './room.entity';
 
 @Entity()
 export class Resource {

@@ -1,7 +1,3 @@
-import { Reservation } from 'src/reservation/reservation.entity';
-import { Resource } from 'src/room/resource.entity';
-import { Review } from 'src/room/review.entity';
-import { FavoritesRoom } from 'src/user/favoritesRooms.entity';
 import {
   Column,
   CreateDateColumn,
@@ -10,6 +6,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { Reservation } from '../reservation/reservation.entity';
+import { FavoritesRoom } from '../user/favoritesRooms.entity';
+import { Resource } from './resource.entity';
+import { Review } from './review.entity';
 
 @Entity()
 export class Room {

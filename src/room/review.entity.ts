@@ -1,5 +1,3 @@
-import { Room } from 'src/room/room.entity';
-import { User } from 'src/user/user.entity';
 import {
   Column,
   CreateDateColumn,
@@ -8,6 +6,8 @@ import {
   ManyToOne,
   UpdateDateColumn,
 } from 'typeorm';
+import { User } from '../user/user.entity';
+import { Room } from './room.entity';
 
 @Entity()
 export class Review {
