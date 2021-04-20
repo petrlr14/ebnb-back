@@ -25,8 +25,8 @@ export class Reservation {
   startDate: Date;
   @Column({ type: 'timestamp', name: 'end_date' })
   endDate: Date;
-  @Column({ type: 'timestamptz', name: 'start_time' })
-  startTime: Date;
-  @Column({ type: 'timestamptz', name: 'end_time' })
-  endTime: Date;
+  @Column({ name: 'start_time' })
+  startTime: string;
+  @Column({ name: 'end_time' })
+  endTime: string;
 }
