@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Resource } from '../resources/resource.entity';
 import { Room } from './room.entity';
@@ -17,7 +17,9 @@ export class RoomService {
   }
 
   async getRoomById(id: number) {
-    return await this.roomRepository.findOne(id);
+    const room = await this.roomRepository.findOne(id);
+    if (!room) throw new NotFoundException('Room not found');
+    return room;
   }
 
   async getRooms() {

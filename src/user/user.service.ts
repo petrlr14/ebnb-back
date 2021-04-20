@@ -53,7 +53,7 @@ export class UserService {
         templateId: this.configService.get<string>('SENDGRID_TEMPLATE'),
         personalizations: [
           {
-            to: 'pedrisqui14@gmail.com', //userWithVerificationId.email,
+            to: userWithVerificationId.email,
             dynamicTemplateData: {
               verification_link: `${this.configService.get<string>(
                 'FRONT_LINK',
@@ -62,7 +62,6 @@ export class UserService {
           },
         ],
       });
-      console.log(response);
     } catch (e) {
       throw e;
     }
@@ -77,9 +76,7 @@ export class UserService {
         email: userWithouVerificationId.email,
       };
       return {
-        token: this.jwtService.sign(payload, {
-          expiresIn: 60 * 10,
-        }),
+        token: this.jwtService.sign(payload),
       };
     } else {
       throw new UnauthorizedException();
