@@ -9,6 +9,7 @@ const mockRepository = () => ({
   find: jest.fn(),
   findOne: jest.fn(),
   addResources: jest.fn(),
+  getRooms: jest.fn(),
 });
 
 describe('RoomService', () => {
@@ -72,8 +73,8 @@ describe('RoomService', () => {
   });
   describe('getRooms', () => {
     it('should get all Rooms', async () => {
-      jest.spyOn(repository, 'find').mockResolvedValue([mockRoom]);
-      expect((await service.getRooms()).length).toBe(1);
+      jest.spyOn(repository, 'getRooms').mockResolvedValue([mockRoom]);
+      expect((await service.getRooms({})).length).toBe(1);
     });
   });
   describe('add Resource', () => {
