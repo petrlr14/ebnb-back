@@ -1,4 +1,4 @@
-import { Field, InputType, OmitType, PartialType } from '@nestjs/graphql';
+import { Field, InputType, PartialType } from '@nestjs/graphql';
 
 @InputType()
 export class CreateRoomInput {
@@ -13,6 +13,4 @@ export class CreateRoomInput {
 }
 
 @InputType()
-export class RoomFilterInput extends PartialType(
-  OmitType(CreateRoomInput, ['name']),
-) {}
+export class RoomFilterInput extends PartialType(CreateRoomInput) {}

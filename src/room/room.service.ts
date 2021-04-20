@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Resource } from '../resources/resource.entity';
 import { Room } from './room.entity';
-import { CreateRoomInput } from './room.input';
+import { CreateRoomInput, RoomFilterInput } from './room.input';
 import { RoomRepository } from './room.repository';
 
 @Injectable()
@@ -22,8 +22,8 @@ export class RoomService {
     return room;
   }
 
-  async getRooms() {
-    return await this.roomRepository.find();
+  async getRooms(roomFilterInput: RoomFilterInput) {
+    return await this.roomRepository.getRooms(roomFilterInput);
   }
 
   async createRoom(createRoom: CreateRoomInput) {
