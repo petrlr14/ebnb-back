@@ -8,6 +8,7 @@ import { ConfigurationModule } from './config/configuration.module';
 import { DatabaseModule } from './config/database.module';
 import { SendgridModule } from './sendgrid/sendgrid.module';
 import { ResourcesModule } from './resources/resources.module';
+import { ServicesModule } from './service/service.module';
 @Module({
   imports: [
     ConfigurationModule,
@@ -23,6 +24,7 @@ import { ResourcesModule } from './resources/resources.module';
         dateScalarMode: 'timestamp',
       },
     }),
+    ServicesModule,
   ],
   controllers: [],
   providers: [],
