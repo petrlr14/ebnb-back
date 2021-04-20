@@ -25,6 +25,6 @@ import { UserService } from './user.service';
     TypeOrmModule.forFeature([UserRepository, FavoritesRoom]),
   ],
   providers: [UserService, UserResolver, JwtStrategy],
-  exports: [JwtStrategy, PassportModule, TypeOrmModule],
+  exports: [JwtStrategy, PassportModule, TypeOrmModule, JwtModule],
 })
 export class UserModule {}
