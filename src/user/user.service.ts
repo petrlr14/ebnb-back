@@ -48,7 +48,12 @@ export class UserService {
           expiresIn: 60 * 10,
         }),
       );
-      const response = await this.sendGridClient.send({
+      return await this.sendGridClient.send({
+        mailSettings: {
+          sandboxMode: {
+            enable: this.configService.get<string>('NODE_ENV') === 'test',
+          },
+        },
         from: this.configService.get<string>('SENDGRID_SENDER'),
         templateId: this.configService.get<string>('SENDGRID_TEMPLATE'),
         personalizations: [
