@@ -19,6 +19,9 @@ import { ResourcesModule } from './resources/resources.module';
     ResourcesModule,
     GraphQLModule.forRoot({
       autoSchemaFile: true,
+      buildSchemaOptions: {
+        dateScalarMode: 'timestamp',
+      },
     }),
   ],
   controllers: [],
