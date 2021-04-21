@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { Resource } from '../resources/resource.entity';
+import { Service } from '../service/service.entity';
 import { Room } from './room.entity';
 import { RoomRepository } from './room.repository';
 import { RoomService } from './room.service';
@@ -10,6 +11,7 @@ const mockRepository = () => ({
   findOne: jest.fn(),
   addResources: jest.fn(),
   getRooms: jest.fn(),
+  addServices: jest.fn(),
 });
 
 describe('RoomService', () => {
@@ -39,6 +41,7 @@ describe('RoomService', () => {
   mockRoom.location = '2da Planta';
   mockRoom.name = 'BoosterSide';
   mockRoom.resources = [];
+  mockRoom.services = [];
 
   describe('Create Room', () => {
     const input = {
@@ -59,7 +62,7 @@ describe('RoomService', () => {
     it('should get room with id', async () => {
       jest.spyOn(repository, 'findOne').mockResolvedValue(mockRoom);
       const room = await service.getRoomById(1);
-      expect(repository.findOne).toHaveBeenCalledWith(1);
+      expect(repository.findOne).toHaveBeenCalledWith(1, {});
       expect(room.id).toBe(1);
     });
     it('should faild to get room with id', async () => {
@@ -91,6 +94,33 @@ describe('RoomService', () => {
         mockRoom,
       );
       expect(result.resources.length).toBe(1);
+    });
+  });
+  describe(' add service', () => {
+    const mockService = new Service();
+    mockService.displayName = 'NAME';
+    mockService.name = 'Name';
+    it('should fail to add service to room', async () => {
+      jest
+        .spyOn(repository, 'findOne')
+        .mockResolvedValue({ ...mockRoom, services: [] });
+      jest.spyOn(repository, 'addServices').mockResolvedValue([[], [1]]);
+      try {
+        await service.addServices([1], 1);
+      } catch (e) {
+        expect(e.status).toBe(409);
+      }
+    });
+    it('should add service to room', async () => {
+      jest
+        .spyOn(repository, 'findOne')
+        .mockResolvedValue({ ...mockRoom, services: [] });
+      jest
+        .spyOn(repository, 'addServices')
+        .mockResolvedValue([[{ ...mockRoom, services: [mockService] }], []]);
+      expect(mockRoom.services.length === 0);
+      const result = await service.addServices([1], 1);
+      expect(result.services.length === 1);
     });
   });
 });
