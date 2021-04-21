@@ -1,19 +1,37 @@
+import { Field, ObjectType } from '@nestjs/graphql';
 import {
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
+  PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
 import { Room } from '../room/room.entity';
 import { User } from './user.entity';
 
+@ObjectType()
 @Entity('fav_room')
+@Index(['user', 'room'], { unique: true })
 export class FavoritesRoom {
-  @ManyToOne(() => User, (user) => user.id, { primary: true, eager: true })
+  @Field()
+  @PrimaryGeneratedColumn()
+  id: number;
+  @Field()
+  @ManyToOne(() => User, (user) => user.id, {
+    primary: true,
+    eager: true,
+    orphanedRowAction: 'delete',
+  })
   @JoinColumn({ name: 'user_id' })
   user!: User;
-  @ManyToOne(() => Room, (room) => room.id, { primary: true, eager: true })
+  @Field()
+  @ManyToOne(() => Room, (room) => room.id, {
+    primary: true,
+    eager: true,
+    orphanedRowAction: 'delete',
+  })
   @JoinColumn({ name: 'room_id' })
   room!: Room;
   @CreateDateColumn({ name: 'created_at' })

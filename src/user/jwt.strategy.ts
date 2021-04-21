@@ -20,7 +20,10 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
   }
 
   async validate({ email }: JwtPayload) {
-    const user = await this.userRepository.findOne({ email });
+    const user = await this.userRepository.findOne(
+      { email },
+      { relations: ['favRooms', 'reservations'] },
+    );
     if (!user) throw new UnauthorizedException();
     return user;
   }

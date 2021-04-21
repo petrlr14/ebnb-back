@@ -9,7 +9,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { SendgridService } from '../sendgrid/sendgrid.service';
 import { JwtPayload } from './jwtPayload.interface';
 import { User } from './user.entity';
-import { CreateUserInput, FindUser } from './user.input';
+import { CreateUserInput, FindUserInput, LikeRoomInput } from './user.input';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -27,16 +27,25 @@ export class UserService {
   }
 
   async getAllUsers(): Promise<User[]> {
-    return await this.userRepository.find({});
+    return await this.userRepository.find({
+      relations: ['favRooms', 'reservations'],
+    });
   }
 
-  async getUser(filter: FindUser): Promise<User> {
+  async getUser(filter: FindUserInput): Promise<User> {
     const result = await this.userRepository.getUser(filter);
     if (!result) throw new NotFoundException();
     return result;
   }
 
-  async sendVerification(filter: FindUser) {
+  async toggleFavoritesRoom(
+    likeInput: LikeRoomInput,
+    user: User,
+  ): Promise<User> {
+    return await this.userRepository.toggleFavoritesRoom(likeInput, user);
+  }
+
+  async sendVerification(filter: FindUserInput) {
     try {
       const user = await this.getUser(filter);
       const payload: JwtPayload = {

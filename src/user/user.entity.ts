@@ -10,6 +10,7 @@ import {
   UpdateDateColumn,
 } from 'typeorm';
 import { Reservation } from '../reservation/reservation.entity';
+import { FavoritesRoom } from './favoritesRooms.entity';
 @ObjectType()
 @Entity('user')
 export class User {
@@ -29,6 +30,11 @@ export class User {
   @Field(() => [Reservation])
   @OneToMany(() => Reservation, (reservation) => reservation.user)
   reservations: Reservation[];
+  @Field(() => [FavoritesRoom])
+  @OneToMany(() => FavoritesRoom, (favRooms) => favRooms.user, {
+    cascade: ['insert'],
+  })
+  favRooms: FavoritesRoom[];
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
   @UpdateDateColumn({ name: 'updated_at' })

@@ -4,7 +4,7 @@ import { Request } from 'express';
 import { User } from './user.entity';
 import { GResponse } from './user.gql.model';
 import { CurrentUser, GqlAuthGuard } from './user.guard';
-import { CreateUserInput, FindUser } from './user.input';
+import { CreateUserInput, FindUserInput, LikeRoomInput } from './user.input';
 import { UserService } from './user.service';
 
 @Resolver(() => User)
@@ -15,7 +15,7 @@ export class UserResolver {
     return this.userService.getAllUsers();
   }
   @Query(() => User)
-  async getUser(@Args('getUserInput') getUserInput: FindUser) {
+  async getUser(@Args('getUserInput') getUserInput: FindUserInput) {
     return this.userService.getUser(getUserInput);
   }
   @Mutation(() => User)
@@ -23,8 +23,17 @@ export class UserResolver {
     return await this.userService.createUser(createUserInput);
   }
 
+  @Mutation(() => User)
+  @UseGuards(GqlAuthGuard)
+  async toggleFavoritesRoom(
+    @CurrentUser('user') user: User,
+    @Args('likeRoomInput') likeRoomInput: LikeRoomInput,
+  ) {
+    return await this.userService.toggleFavoritesRoom(likeRoomInput, user);
+  }
+
   @Mutation(() => GResponse)
-  async sendVerification(@Args('getUserInput') getUserInput: FindUser) {
+  async sendVerification(@Args('getUserInput') getUserInput: FindUserInput) {
     await this.userService.sendVerification(getUserInput);
     return {
       data: 'An email was sent',
