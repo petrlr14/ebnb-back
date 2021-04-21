@@ -44,6 +44,7 @@ export class RoomService {
         successServices: result[0],
       });
     }
+    console.log(result[1]);
     return result[0][0];
   }
 }
