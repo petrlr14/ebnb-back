@@ -44,12 +44,11 @@ describe('UserService', () => {
         services,
       ]);
     });
-    it('should inser one', async () => {
+    it('should insert one', async () => {
       jest
         .spyOn(repository, 'createMultipleServices')
         .mockResolvedValue([[services], []]);
       const result = await service.createServices([{ ...services }]);
-      console.log(result);
       expect(result[0].displayName).toBe(services.displayName);
     });
   });

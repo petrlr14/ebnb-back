@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Resource } from '../resources/resource.entity';
 import { Room } from './room.entity';
@@ -16,8 +20,8 @@ export class RoomService {
     return await this.roomRepository.addResources(resouces, room);
   }
 
-  async getRoomById(id: number) {
-    const room = await this.roomRepository.findOne(id);
+  async getRoomById(id: number, options: { [key: string]: any } = {}) {
+    const room = await this.roomRepository.findOne(id, { ...options });
     if (!room) throw new NotFoundException('Room not found');
     return room;
   }
@@ -28,5 +32,18 @@ export class RoomService {
 
   async createRoom(createRoom: CreateRoomInput) {
     return await this.roomRepository.createRoom(createRoom);
+  }
+
+  async addServices(servicesIds: number[], roomId: number): Promise<Room> {
+    const room = await this.getRoomById(roomId, { relations: ['services'] });
+    const result = await this.roomRepository.addServices(servicesIds, room);
+    if (result[1].length > 0) {
+      throw new ConflictException({
+        message: `${result[1].length} services are conflict`,
+        conflicServices: result[1],
+        successServices: result[0],
+      });
+    }
+    return result[0][0];
   }
 }
