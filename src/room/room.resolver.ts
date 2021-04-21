@@ -21,7 +21,7 @@ export class RoomResolver {
     return this.roomService.createRoom(createRoomInput);
   }
 
-  @Mutation(() => [Room])
+  @Mutation(() => Room)
   async addServices(
     @Args('servicesIds')
     addServicesInput: AddServiceInput,

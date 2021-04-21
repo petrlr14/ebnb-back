@@ -14,8 +14,8 @@ export class CreateRoomInput {
 
 @InputType()
 class RoomFilterWithServiceId extends CreateRoomInput {
-  @Field()
-  serviceId: number;
+  @Field(() => [Int])
+  serviceId: number[];
 }
 @InputType()
 export class RoomFilterInput extends PartialType(RoomFilterWithServiceId) {}

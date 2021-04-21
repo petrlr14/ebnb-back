@@ -1,4 +1,4 @@
-import { EntityRepository, Repository } from 'typeorm';
+import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm';
 import { Resource } from '../resources/resource.entity';
 import { Service } from '../service/service.entity';
 import { Room } from './room.entity';
@@ -36,12 +36,25 @@ export class RoomRepository extends Repository<Room> {
         location: `%${roomFilterInput.location.toLowerCase()}%`,
       });
     }
-    query.leftJoinAndSelect('room.services', 'services');
     if (roomFilterInput.serviceId) {
-      query.where('services.id = :id', { id: roomFilterInput.serviceId });
+      // gets all the rooms that has the requested service
+      query.innerJoinAndSelect(
+        (sb: SelectQueryBuilder<any>) => {
+          return sb
+            .select('room.id', 'id')
+            .from(Room, 'room')
+            .innerJoin('room.services', 'services')
+            .where('services.id IN (:...ids)', {
+              ids: roomFilterInput.serviceId,
+            });
+        },
+        'servicesx',
+        'room.id = servicesx.id',
+      );
     }
     const result = await query
       .leftJoinAndSelect('room.resources', 'resource')
+      .leftJoinAndSelect('room.services', 'services')
       .getMany();
     return result;
   }
@@ -61,7 +74,10 @@ export class RoomRepository extends Repository<Room> {
         const service = new Service();
         service.id = id;
         try {
-          room.services = [...room.services, service];
+          await this.createQueryBuilder('room')
+            .relation(Room, 'services')
+            .of(room)
+            .add(service);
         } catch (e) {
           console.log(e);
           error.push(id);
