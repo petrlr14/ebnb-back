@@ -60,7 +60,9 @@ export class Room {
 
   @Field(() => [Service])
   @ManyToMany(() => Service, (service) => service.rooms)
-  @JoinTable()
+  @JoinTable({
+    name: 'room_services',
+  })
   services: Service[];
 
   @CreateDateColumn({ name: 'created_at' })
