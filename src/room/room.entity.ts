@@ -3,6 +3,8 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  JoinTable,
+  ManyToMany,
   OneToMany,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
@@ -11,6 +13,7 @@ import { Reservation } from '../reservation/reservation.entity';
 import { FavoritesRoom } from '../user/favoritesRooms.entity';
 import { Resource } from '../resources/resource.entity';
 import { Review } from './review.entity';
+import { Service } from '../service/service.entity';
 
 @Entity()
 @ObjectType()
@@ -54,6 +57,11 @@ export class Room {
 
   @OneToMany(() => FavoritesRoom, (favRoom) => favRoom.user)
   favRoom: FavoritesRoom[];
+
+  @Field(() => [Service])
+  @ManyToMany(() => Service, (service) => service.rooms)
+  @JoinTable()
+  services: Service[];
 
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
