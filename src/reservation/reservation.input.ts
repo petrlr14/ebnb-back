@@ -1,4 +1,6 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { Matches } from 'class-validator';
+import { timeFormatPattern } from '../utils/dateFormat';
 
 @InputType()
 export class CreateReservationInput {
@@ -9,7 +11,9 @@ export class CreateReservationInput {
   @Field()
   endDate: Date;
   @Field()
+  @Matches(...timeFormatPattern)
   startTime: string;
   @Field()
+  @Matches(...timeFormatPattern)
   endTime: string;
 }

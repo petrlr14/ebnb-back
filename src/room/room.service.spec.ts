@@ -49,6 +49,8 @@ describe('RoomService', () => {
       capacity: 10,
       location: '2da Planta',
       name: 'BoosterSide',
+      openingTime: '01:10',
+      closingTime: '02:20',
     };
     it('should create a room', async () => {
       jest.spyOn(repository, 'createRoom').mockResolvedValue(mockRoom);

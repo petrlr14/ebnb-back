@@ -65,6 +65,12 @@ export class Room {
   })
   services: Service[];
 
+  @Column({ name: 'opening_time' })
+  openingTime: string;
+
+  @Column({ name: 'closing_time' })
+  closingTime: string;
+
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
 

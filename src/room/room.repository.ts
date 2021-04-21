@@ -1,3 +1,4 @@
+import { UnprocessableEntityException } from '@nestjs/common';
 import { EntityRepository, Repository, SelectQueryBuilder } from 'typeorm';
 import { Resource } from '../resources/resource.entity';
 import { Service } from '../service/service.entity';
@@ -7,6 +8,11 @@ import { CreateRoomInput, RoomFilterInput } from './room.input';
 export class RoomRepository extends Repository<Room> {
   async createRoom(createRoom: CreateRoomInput) {
     const room = new Room();
+    if (createRoom.openingTime >= createRoom.closingTime) {
+      throw new UnprocessableEntityException({
+        message: 'Opening time is after Closing time',
+      });
+    }
     for (const x in createRoom) {
       room[x] = createRoom[x];
     }
@@ -48,14 +54,21 @@ export class RoomRepository extends Repository<Room> {
               ids: roomFilterInput.serviceId,
             });
         },
-        'servicesx',
-        'room.id = servicesx.id',
+        'filteredServices',
+        'room.id = filteredServices.id',
       );
     }
     const result = await query
       .leftJoinAndSelect('room.resources', 'resource')
       .leftJoinAndSelect('room.services', 'services')
       .getMany();
+    if (roomFilterInput.openingTime && roomFilterInput.closingTime) {
+      return result.filter(
+        ({ openingTime, closingTime }) =>
+          openingTime <= roomFilterInput.openingTime &&
+          closingTime >= roomFilterInput.closingTime,
+      );
+    }
     return result;
   }
 

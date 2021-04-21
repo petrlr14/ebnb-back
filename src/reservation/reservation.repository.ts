@@ -1,4 +1,7 @@
-import { ConflictException } from '@nestjs/common';
+import {
+  ConflictException,
+  UnprocessableEntityException,
+} from '@nestjs/common';
 import { EntityRepository, Repository } from 'typeorm';
 import { Room } from '../room/room.entity';
 import { User } from '../user/user.entity';
@@ -13,6 +16,21 @@ export class ReservationRepository extends Repository<Reservation> {
     room: Room,
     createInput: CreateReservationInput,
   ) {
+    if (createInput.startTime >= createInput.endTime) {
+      throw new UnprocessableEntityException({
+        message: 'Opening time is after Closing time',
+      });
+    }
+    if (
+      !(
+        room.openingTime <= createInput.startTime &&
+        room.closingTime >= createInput.endTime
+      )
+    ) {
+      throw new UnprocessableEntityException({
+        message: "Start time or end time its out of bounds room's schedule",
+      });
+    }
     const fixedStartDate = new Date(createInput.startDate.setHours(0, 0, 0, 0));
     const fixedEndDate = new Date(createInput.endDate.setHours(0, 0, 0, 0));
     const reservation = new Reservation();

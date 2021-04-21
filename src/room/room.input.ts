@@ -1,4 +1,6 @@
 import { Field, InputType, Int, PartialType } from '@nestjs/graphql';
+import { Matches } from 'class-validator';
+import { timeFormatPattern } from '../utils/dateFormat';
 
 @InputType()
 export class CreateRoomInput {
@@ -10,6 +12,12 @@ export class CreateRoomInput {
   building: string;
   @Field()
   capacity: number;
+  @Field()
+  @Matches(...timeFormatPattern)
+  openingTime: string;
+  @Field()
+  @Matches(...timeFormatPattern)
+  closingTime: string;
 }
 
 @InputType()
