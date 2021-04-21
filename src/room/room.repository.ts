@@ -1,5 +1,6 @@
 import { EntityRepository, Repository } from 'typeorm';
 import { Resource } from '../resources/resource.entity';
+import { Service } from '../service/service.entity';
 import { Room } from './room.entity';
 import { CreateRoomInput, RoomFilterInput } from './room.input';
 @EntityRepository(Room)
@@ -35,6 +36,10 @@ export class RoomRepository extends Repository<Room> {
         location: `%${roomFilterInput.location.toLowerCase()}%`,
       });
     }
+    query.leftJoinAndSelect('room.services', 'services');
+    if (roomFilterInput.serviceId) {
+      query.where('services.id = :id', { id: roomFilterInput.serviceId });
+    }
     const result = await query
       .leftJoinAndSelect('room.resources', 'resource')
       .getMany();
@@ -44,5 +49,25 @@ export class RoomRepository extends Repository<Room> {
   async addResources(resouces: Resource[], room: Room) {
     room.resources = [...room.resources, ...resouces];
     return await this.save(room);
+  }
+
+  async addServices(
+    servicesIds: number[],
+    room: Room,
+  ): Promise<[x1: Room[], x2: any[]]> {
+    const error = [];
+    await Promise.all(
+      servicesIds.map(async (id) => {
+        const service = new Service();
+        service.id = id;
+        try {
+          room.services = [...room.services, service];
+        } catch (e) {
+          console.log(e);
+          error.push(id);
+        }
+      }),
+    );
+    return [[room], error];
   }
 }
