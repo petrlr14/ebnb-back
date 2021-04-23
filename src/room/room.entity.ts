@@ -52,10 +52,11 @@ export class Room {
   @OneToMany(() => Reservation, (reservation) => reservation.room)
   reservations: Reservation[];
 
+  @Field(() => [Review])
   @OneToMany(() => Review, (review) => review.room)
   reviews: Review[];
 
-  @OneToMany(() => FavoritesRoom, (favRoom) => favRoom.user)
+  @OneToMany(() => FavoritesRoom, (favRoom) => favRoom.room)
   favRoom: FavoritesRoom[];
 
   @Field(() => [Service])
@@ -65,9 +66,15 @@ export class Room {
   })
   services: Service[];
 
+  @Field()
+  @Column({ type: 'text', nullable: true })
+  description: string;
+
+  @Field()
   @Column({ name: 'opening_time' })
   openingTime: string;
 
+  @Field()
   @Column({ name: 'closing_time' })
   closingTime: string;
 
@@ -76,4 +83,7 @@ export class Room {
 
   @UpdateDateColumn({ name: 'updated_at' })
   updatedAt: Date;
+
+  @Field({ nullable: true })
+  isFav: boolean;
 }
