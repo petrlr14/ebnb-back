@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { GqlExecutionContext } from '@nestjs/graphql';
 import { AuthGuard } from '@nestjs/passport';
+import { JWTErrorHanlder } from '../utils/errorHandler';
 @Injectable()
 export class GqlAuthGuard extends AuthGuard('jwt') {
   getRequest(context: ExecutionContext) {
@@ -20,6 +21,7 @@ export class GqlOptionalAuthGuard extends AuthGuard('jwt') {
   }
 
   handleRequest<User>(error: any, user: User, info: any) {
+    if (!user) JWTErrorHanlder(info.message);
     return user ?? null;
   }
 }
