@@ -25,7 +25,6 @@ export class RoomResolver {
     @Args('roomFilterInput') roomFilterInput: RoomFilterInput,
     @CurrentUser('user') user: User,
   ) {
-    console.log(roomFilterInput);
     return await this.roomService.getRooms(roomFilterInput, user);
   }
 

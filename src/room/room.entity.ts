@@ -67,7 +67,7 @@ export class Room {
   services: Service[];
 
   @Field()
-  @Column({ type: 'text', nullable: true })
+  @Column({ type: 'text' })
   description: string;
 
   @Field()

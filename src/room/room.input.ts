@@ -18,6 +18,8 @@ export class CreateRoomInput {
   @Field()
   @Matches(...timeFormatPattern)
   closingTime: string;
+  @Field()
+  description: string;
 }
 
 @InputType()

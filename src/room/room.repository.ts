@@ -44,6 +44,9 @@ export class RoomRepository extends Repository<Room> {
         })
         .orWhere('LOWER(room.location) LIKE :term', {
           term: `%${searchTerm}%`,
+        })
+        .orWhere('LOWER(room.description) LIKE :term', {
+          term: `%${searchTerm}%`,
         });
       subQuery
         .orWhere('LOWER(room.name) LIKE :term', {
@@ -53,6 +56,9 @@ export class RoomRepository extends Repository<Room> {
           term: `%${searchTerm}%`,
         })
         .orWhere('LOWER(room.location) LIKE :term', {
+          term: `%${searchTerm}%`,
+        })
+        .orWhere('LOWER(room.description) LIKE :term', {
           term: `%${searchTerm}%`,
         });
     } else {
