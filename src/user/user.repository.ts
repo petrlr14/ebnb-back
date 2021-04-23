@@ -44,23 +44,25 @@ export class UserRepository extends Repository<User> {
     likeInput: LikeRoomInput,
     user: User,
   ): Promise<User> {
-    let userFavs = user.favRooms.filter(
-      ({ room: { id } }) => id !== likeInput.roomId,
-    );
-    if (userFavs.length !== user.favRooms.length) {
-      user.favRooms = userFavs;
+    const index = user.favRooms.findIndex(({ room: { id } }) => {
+      return id === likeInput.roomId;
+    });
+    if (index >= 0) {
+      const userFavRooms = [...user.favRooms];
+      userFavRooms.splice(index, 1);
+      user.favRooms = userFavRooms;
     } else {
       const room = new Room();
       room.id = likeInput.roomId;
       const favRoom = new FavoritesRoom();
       favRoom.room = room;
       favRoom.user = user;
-      userFavs = [...userFavs, favRoom];
+      user.favRooms = [...user.favRooms, favRoom];
     }
 
     try {
-      user.favRooms = [...userFavs];
-      return await this.save(user);
+      const userUpdated = await this.save(user);
+      return userUpdated;
     } catch (e) {
       throw e;
     }

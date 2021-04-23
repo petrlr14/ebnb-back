@@ -5,6 +5,7 @@ import {
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Resource } from '../resources/resource.entity';
+import { User } from '../user/user.entity';
 import { Room } from './room.entity';
 import { CreateRoomInput, RoomFilterInput } from './room.input';
 import { RoomRepository } from './room.repository';
@@ -26,8 +27,8 @@ export class RoomService {
     return room;
   }
 
-  async getRooms(roomFilterInput: RoomFilterInput) {
-    return await this.roomRepository.getRooms(roomFilterInput);
+  async getRooms(roomFilterInput: RoomFilterInput, user?: User) {
+    return await this.roomRepository.getRooms(roomFilterInput, user);
   }
 
   async createRoom(createRoom: CreateRoomInput) {

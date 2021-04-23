@@ -1,5 +1,5 @@
-import { Field, InputType, PartialType } from '@nestjs/graphql';
-import { IsEmail, IsOptional } from 'class-validator';
+import { Field, InputType, Int, PartialType } from '@nestjs/graphql';
+import { IsEmail } from 'class-validator';
 
 @InputType()
 export class CreateUserInput {
@@ -22,6 +22,6 @@ export class FindUserInput extends PartialType(FindUser) {}
 
 @InputType()
 export class LikeRoomInput {
-  @Field()
+  @Field(() => Int)
   roomId: number;
 }

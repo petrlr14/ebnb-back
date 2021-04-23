@@ -18,15 +18,7 @@ export class FavoritesRoom {
   @Field()
   @PrimaryGeneratedColumn()
   id: number;
-  @Field()
-  @ManyToOne(() => User, (user) => user.id, {
-    primary: true,
-    eager: true,
-    orphanedRowAction: 'delete',
-  })
-  @JoinColumn({ name: 'user_id' })
-  user!: User;
-  @Field()
+  @Field(() => Room)
   @ManyToOne(() => Room, (room) => room.id, {
     primary: true,
     eager: true,
@@ -34,6 +26,14 @@ export class FavoritesRoom {
   })
   @JoinColumn({ name: 'room_id' })
   room!: Room;
+  @Field(() => User)
+  @ManyToOne(() => User, (user) => user.id, {
+    primary: true,
+    eager: true,
+    orphanedRowAction: 'delete',
+  })
+  @JoinColumn({ name: 'user_id' })
+  user!: User;
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;
   @UpdateDateColumn({ name: 'updated_at' })

@@ -1,4 +1,7 @@
-import { Args, Mutation, Resolver, Query } from '@nestjs/graphql';
+import { UseGuards } from '@nestjs/common';
+import { Args, Mutation, Resolver, Query, Int } from '@nestjs/graphql';
+import { User } from '../user/user.entity';
+import { CurrentUser, GqlOptionalAuthGuard } from '../user/user.guard';
 import { Room } from './room.entity';
 import {
   AddServiceInput,
@@ -11,9 +14,18 @@ import { RoomService } from './room.service';
 export class RoomResolver {
   constructor(private readonly roomService: RoomService) {}
 
+  @Query(() => Room)
+  async getRoomById(@Args('id', { type: () => Int }) id: number) {
+    return await this.roomService.getRoomById(id, { relations: ['services'] });
+  }
+
   @Query(() => [Room])
-  async getRooms(@Args('roomFilterInput') roomFilterInput: RoomFilterInput) {
-    return await this.roomService.getRooms(roomFilterInput);
+  @UseGuards(GqlOptionalAuthGuard)
+  async getRooms(
+    @Args('roomFilterInput') roomFilterInput: RoomFilterInput,
+    @CurrentUser('user') user: User,
+  ) {
+    return await this.roomService.getRooms(roomFilterInput, user);
   }
 
   @Mutation(() => Room)

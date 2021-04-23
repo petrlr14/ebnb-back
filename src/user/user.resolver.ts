@@ -52,6 +52,7 @@ export class UserResolver {
     );
     return {
       data: token.token,
+      user,
     };
   }
 }

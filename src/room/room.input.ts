@@ -18,12 +18,18 @@ export class CreateRoomInput {
   @Field()
   @Matches(...timeFormatPattern)
   closingTime: string;
+  @Field()
+  description: string;
 }
 
 @InputType()
 class RoomFilterWithServiceId extends CreateRoomInput {
   @Field(() => [Int])
   serviceId: number[];
+  @Field()
+  search: string;
+  @Field(() => Int)
+  limit: number;
 }
 @InputType()
 export class RoomFilterInput extends PartialType(RoomFilterWithServiceId) {}
