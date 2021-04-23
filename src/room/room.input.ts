@@ -26,6 +26,8 @@ class RoomFilterWithServiceId extends CreateRoomInput {
   serviceId: number[];
   @Field()
   search: string;
+  @Field(() => Int)
+  max: number;
 }
 @InputType()
 export class RoomFilterInput extends PartialType(RoomFilterWithServiceId) {}

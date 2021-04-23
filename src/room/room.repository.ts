@@ -117,10 +117,16 @@ export class RoomRepository extends Repository<Room> {
       .orderBy('services.id', 'DESC');
     let roomsLikedByUser: { isFav: boolean }[];
 
-    if (user) {
-      roomsLikedByUser = await subQuery.orderBy('id', 'ASC').getRawMany();
+    if (roomFilterInput.max) {
+      subQuery.orderBy('id', 'ASC').limit(roomFilterInput.max);
+      query.orderBy('room.id', 'ASC').limit(roomFilterInput.max);
     }
-    const result = await query.orderBy('room.id', 'ASC').getMany();
+
+    if (user) {
+      roomsLikedByUser = await subQuery.getRawMany();
+    }
+
+    const result = await query.getMany();
     if (roomFilterInput.openingTime && roomFilterInput.closingTime) {
       return result.filter(
         ({ openingTime, closingTime }) =>
@@ -131,7 +137,6 @@ export class RoomRepository extends Repository<Room> {
     return result.map((room, index) => {
       if (user) room.isFav = roomsLikedByUser[index].isFav;
       else room.isFav = null;
-      console.log(room.services);
       return room;
     });
   }
