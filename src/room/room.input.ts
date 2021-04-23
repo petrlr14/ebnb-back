@@ -27,7 +27,7 @@ class RoomFilterWithServiceId extends CreateRoomInput {
   @Field()
   search: string;
   @Field(() => Int)
-  max: number;
+  limit: number;
 }
 @InputType()
 export class RoomFilterInput extends PartialType(RoomFilterWithServiceId) {}

@@ -109,7 +109,6 @@ export class RoomRepository extends Repository<Room> {
         x2: roomFilterInput.capacity + 5,
       });
     }
-
     query
       .leftJoinAndSelect('room.resources', 'resource')
       .orderBy('resource.id', 'DESC')
@@ -117,16 +116,11 @@ export class RoomRepository extends Repository<Room> {
       .orderBy('services.id', 'DESC');
     let roomsLikedByUser: { isFav: boolean }[];
 
-    if (roomFilterInput.max) {
-      subQuery.orderBy('id', 'ASC').limit(roomFilterInput.max);
-      query.orderBy('room.id', 'ASC').limit(roomFilterInput.max);
-    }
-
     if (user) {
-      roomsLikedByUser = await subQuery.getRawMany();
+      roomsLikedByUser = await subQuery.orderBy('id', 'ASC').getRawMany();
     }
 
-    const result = await query.getMany();
+    const result = await query.orderBy('room.id', 'ASC').getMany();
     if (roomFilterInput.openingTime && roomFilterInput.closingTime) {
       return result.filter(
         ({ openingTime, closingTime }) =>
@@ -134,7 +128,7 @@ export class RoomRepository extends Repository<Room> {
           closingTime >= roomFilterInput.closingTime,
       );
     }
-    return result.map((room, index) => {
+    return result.slice(0, roomFilterInput.limit).map((room, index) => {
       if (user) room.isFav = roomsLikedByUser[index].isFav;
       else room.isFav = null;
       return room;
